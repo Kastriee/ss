@@ -1,55 +1,496 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elden Designs</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--cream:#F8F5F0;--warm:#EDE8E0;--charcoal:#1A1A18;--mid:#6B6860;--accent:#C8A96E;--light-border:#E0DAD0;
+}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--charcoal);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+#cursor{position:fixed;width:8px;height:8px;background:var(--charcoal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.15s ease,background 0.2s}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid var(--charcoal);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.08s ease,width 0.2s,height 0.2s,opacity 0.2s;opacity:0.4}
+body:hover #cursor{transform:translate(-50%,-50%) scale(1)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;transition:background 0.4s}
+nav.scrolled{background:rgba(248,245,240,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--light-border)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:1.5rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--charcoal);text-decoration:none}
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;color:var(--mid);transition:color 0.3s}
+.nav-links a:hover{color:var(--charcoal)}
+
+.hero{height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:8rem 4rem 4rem 4rem;position:relative;z-index:2}
+.hero-eyebrow{font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--accent);margin-bottom:2rem;opacity:0;animation:fadeUp 1s 0.3s forwards}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3.5rem,6vw,5.5rem);line-height:1.05;color:var(--charcoal);margin-bottom:2rem;opacity:0;animation:fadeUp 1s 0.6s forwards}
+.hero-title em{font-style:italic;color:var(--mid)}
+.hero-sub{font-size:0.85rem;font-weight:300;letter-spacing:0.05em;line-height:1.9;color:var(--mid);max-width:380px;margin-bottom:3rem;opacity:0;animation:fadeUp 1s 0.9s forwards}
+.hero-cta{display:flex;gap:1.5rem;align-items:center;opacity:0;animation:fadeUp 1s 1.2s forwards}
+.btn-primary{padding:1rem 2.5rem;background:var(--charcoal);color:var(--cream);font-family:'Jost',sans-serif;font-size:0.7rem;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;border:none;cursor:none;transition:all 0.4s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:var(--accent);transform:translateX(-100%);transition:transform 0.4s ease;z-index:-1}
+.btn-primary:hover::after{transform:translateX(0)}
+.btn-primary:hover{color:var(--charcoal)}
+.btn-link{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);text-decoration:none;display:flex;align-items:center;gap:0.5rem;transition:color 0.3s}
+.btn-link::after{content:'→';transition:transform 0.3s}
+.btn-link:hover{color:var(--charcoal)}
+.btn-link:hover::after{transform:translateX(4px)}
+
+.hero-right{position:relative;overflow:hidden;background:var(--warm)}
+.lamp-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.lamp-container{position:relative;width:300px;height:500px}
+.lamp-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(ellipse at 50% 80%,rgba(200,169,110,0.35) 0%,transparent 70%);animation:glowPulse 4s ease-in-out infinite}
+.lamp-body{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);width:160px;height:220px;opacity:0;animation:lampReveal 1.5s 0.5s forwards}
+.lamp-shade{position:absolute;top:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:90px solid transparent;border-right:90px solid transparent;border-bottom:160px solid var(--charcoal);filter:drop-shadow(0 20px 40px rgba(0,0,0,0.15))}
+.lamp-shade-inner{position:absolute;top:160px;left:50%;transform:translateX(-50%);width:180px;height:8px;background:var(--charcoal)}
+.lamp-stem{position:absolute;top:168px;left:50%;transform:translateX(-50%);width:4px;height:80px;background:var(--charcoal)}
+.lamp-base{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:80px;height:16px;background:var(--charcoal);border-radius:4px 4px 0 0}
+.lamp-base-foot{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:100px;height:8px;background:#0F0F0E;border-radius:2px}
+.lamp-light{position:absolute;top:20px;left:50%;transform:translateX(-50%);width:60px;height:60px;background:radial-gradient(circle,rgba(200,169,110,0.9) 0%,rgba(200,169,110,0) 70%);animation:lightFlicker 3s ease-in-out infinite}
+.lamp-beam{position:absolute;top:160px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:120px solid transparent;border-right:120px solid transparent;border-top:200px solid rgba(200,169,110,0.07);animation:beamPulse 4s ease-in-out infinite}
+.hero-scroll{position:absolute;bottom:3rem;left:4rem;display:flex;align-items:center;gap:1rem;opacity:0;animation:fadeUp 1s 2s forwards}
+.hero-scroll span{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--mid)}
+.scroll-line{width:40px;height:1px;background:var(--mid);position:relative;overflow:hidden}
+.scroll-line::after{content:'';position:absolute;inset:0;background:var(--charcoal);animation:scrollLine 2s ease-in-out infinite}
+
+.marquee-wrap{background:var(--charcoal);color:var(--cream);padding:1.2rem 0;overflow:hidden}
+.marquee-track{display:flex;gap:3rem;white-space:nowrap;animation:marqueeScroll 20s linear infinite}
+.marquee-item{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;display:flex;align-items:center;gap:1.5rem}
+.marquee-item::after{content:'✦';color:var(--accent);font-size:0.5rem}
+
+.section{padding:8rem 4rem}
+.section-label{font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.5rem,4vw,3.8rem);line-height:1.1;margin-bottom:2rem}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center}
+.about-body{font-size:0.9rem;line-height:2;color:var(--mid);margin-bottom:2rem}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem;padding-top:3rem;border-top:1px solid var(--light-border)}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--charcoal);line-height:1}
+.stat-label{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);margin-top:0.5rem}
+.about-visual{position:relative;height:500px}
+.about-card{position:absolute;background:var(--warm);border:1px solid var(--light-border)}
+.about-card-1{inset:0;bottom:80px;right:60px}
+.about-card-2{width:65%;height:65%;bottom:0;right:0;background:var(--charcoal)}
+.about-card-2-inner{padding:2rem;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.about-card-2-inner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:var(--cream);line-height:1.4;font-weight:300}
+.about-card-2-inner span{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-top:1rem;display:block}
+
+.collection{background:var(--warm);padding:8rem 4rem}
+.collection-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5rem}
+.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.product-card{background:var(--cream);position:relative;cursor:none;overflow:hidden}
+.product-card:hover .product-img{transform:scale(1.04)}
+.product-img-wrap{height:380px;overflow:hidden;background:var(--charcoal);position:relative}
+.product-img{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform 0.6s ease}
+.product-info{padding:1.5rem}
+.product-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;margin-bottom:0.5rem}
+.product-price{font-size:0.75rem;letter-spacing:0.1em;color:var(--mid)}
+.product-tag{position:absolute;top:1.5rem;right:1.5rem;background:var(--accent);color:var(--charcoal);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.4rem 0.8rem}
+.product-hover-overlay{position:absolute;inset:0;background:rgba(26,26,24,0.7);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s}
+.product-card:hover .product-hover-overlay{opacity:1}
+.product-hover-btn{padding:0.8rem 2rem;border:1px solid var(--cream);color:var(--cream);font-family:'Jost',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;background:transparent}
+
+.process{padding:8rem 4rem}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:5rem;position:relative}
+.process-steps::before{content:'';position:absolute;top:2.5rem;left:10%;right:10%;height:1px;background:var(--light-border)}
+.process-step{text-align:center;padding:0 1.5rem;position:relative}
+.step-num{width:5rem;height:5rem;background:var(--cream);border:1px solid var(--light-border);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--charcoal);position:relative;z-index:1;transition:all 0.4s}
+.process-step:hover .step-num{background:var(--charcoal);color:var(--cream);border-color:var(--charcoal)}
+.step-title{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--charcoal);margin-bottom:1rem}
+.step-body{font-size:0.8rem;line-height:1.8;color:var(--mid)}
+
+.testimonial{background:var(--charcoal);color:var(--cream);padding:8rem 4rem;text-align:center}
+.testimonial blockquote{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:clamp(1.8rem,3.5vw,3rem);line-height:1.3;max-width:900px;margin:0 auto 3rem;color:var(--cream)}
+.testimonial cite{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent)}
+
+.custom{padding:8rem 4rem;display:grid;grid-template-columns:1fr 1fr;gap:8rem;align-items:center}
+.custom-visual{height:400px;background:var(--warm);position:relative;overflow:hidden}
+.custom-visual-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+
+footer{background:var(--charcoal);color:var(--cream);padding:5rem 4rem 3rem}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:4rem;padding-bottom:4rem;border-bottom:1px solid rgba(255,255,255,0.1)}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2rem;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem}
+.footer-tagline{font-size:0.8rem;line-height:1.8;color:rgba(255,255,255,0.45);max-width:280px}
+.footer-heading{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:0.8rem}
+.footer-links a{font-size:0.8rem;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.3s}
+.footer-links a:hover{color:var(--cream)}
+.footer-bottom{padding-top:2rem;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:0.7rem;color:rgba(255,255,255,0.3);letter-spacing:0.1em}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glowPulse{0%,100%{opacity:0.7;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.1)}}
+@keyframes lightFlicker{0%,100%{opacity:0.8;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.15)}}
+@keyframes beamPulse{0%,100%{opacity:0.6}50%{opacity:1}}
+@keyframes lampReveal{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes scrollLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes floatLamp{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.9s ease,transform 0.9s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
 </head>
 <body>
 
-  <!-- LAMP COMPONENT — paste between body tags -->
-  <div class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-950 w-full rounded-md">
-    
-    <!-- The light beams + glow effects -->
-    <div class="relative flex w-full flex-1 scale-y-125 items-center justify-center">
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
 
-      <!-- Left beam -->
-      <div class="absolute inset-auto right-1/2 h-56 w-[30rem] bg-cyan-500 opacity-50"
-           style="background: conic-gradient(from 70deg at center top, #06b6d4, transparent, transparent);">
-        <div class="absolute w-full left-0 bg-slate-950 h-40 bottom-0" style="mask-image: linear-gradient(to top, white, transparent); -webkit-mask-image: linear-gradient(to top, white, transparent);"></div>
-        <div class="absolute w-40 h-full left-0 bg-slate-950 bottom-0"  style="mask-image: linear-gradient(to right, white, transparent); -webkit-mask-image: linear-gradient(to right, white, transparent);"></div>
-      </div>
+<nav id="nav">
+  <a href="#" class="nav-logo">Elden Designs</a>
+  <ul class="nav-links">
+    <li><a href="#collection">Collection</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#custom">Custom</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
 
-      <!-- Right beam -->
-      <div class="absolute inset-auto left-1/2 h-56 w-[30rem] bg-cyan-500 opacity-50"
-           style="background: conic-gradient(from 290deg at center top, transparent, transparent, #06b6d4);">
-        <div class="absolute w-40 h-full right-0 bg-slate-950 bottom-0"  style="mask-image: linear-gradient(to left, white, transparent); -webkit-mask-image: linear-gradient(to left, white, transparent);"></div>
-        <div class="absolute w-full right-0 bg-slate-950 h-40 bottom-0" style="mask-image: linear-gradient(to top, white, transparent); -webkit-mask-image: linear-gradient(to top, white, transparent);"></div>
-      </div>
-
-      <!-- Blur layers -->
-      <div class="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
-      <div class="absolute inset-auto h-36 w-[28rem] -translate-y-1/2 rounded-full bg-cyan-500 opacity-50 blur-3xl"></div>
-      <div class="absolute inset-auto h-36 w-64 -translate-y-24 rounded-full bg-cyan-400 blur-2xl"></div>
-
-      <!-- The bright glowing line -->
-      <div class="absolute inset-auto h-0.5 w-[30rem] -translate-y-28 bg-cyan-400"></div>
-
-      <!-- Bottom cover so content sits cleanly -->
-      <div class="absolute inset-auto h-44 w-full -translate-y-52 bg-slate-950"></div>
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">3D Printed Lighting · Est. 2021</p>
+    <h1 class="hero-title">Light,<br>sculpted<br><em>by design.</em></h1>
+    <p class="hero-sub">Handcrafted lamps born from precision printing. Each piece is a unique intersection of geometry, material, and warm light — designed for spaces that refuse ordinary.</p>
+    <div class="hero-cta">
+      <button class="btn-primary">Explore Collection</button>
+      <a href="#process" class="btn-link">Our process</a>
     </div>
-
-    <!-- Your text goes here -->
-    <div class="relative flex -translate-y-80 flex-col items-center px-5">
-      <h1 class="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl">
-        Build lamps <br /> the right way
-      </h1>
-    </div>
-
   </div>
-  <!-- END LAMP COMPONENT -->
+  <div class="hero-right">
+    <div class="lamp-stage">
+      <div class="lamp-container" style="animation:floatLamp 6s ease-in-out infinite">
+        <div class="lamp-glow"></div>
+        <div class="lamp-body">
+          <div class="lamp-light"></div>
+          <div class="lamp-shade"></div>
+          <div class="lamp-shade-inner"></div>
+          <div class="lamp-beam"></div>
+          <div class="lamp-stem"></div>
+          <div class="lamp-base"></div>
+          <div class="lamp-base-foot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">3D Printed Lamps</span>
+    <span class="marquee-item">Geometric Forms</span>
+    <span class="marquee-item">Custom Orders</span>
+    <span class="marquee-item">Sustainable Materials</span>
+    <span class="marquee-item">Handfinished</span>
+    <span class="marquee-item">Unique Pieces</span>
+    <span class="marquee-item">3D Printed Lamps</span>
+    <span class="marquee-item">Geometric Forms</span>
+    <span class="marquee-item">Custom Orders</span>
+    <span class="marquee-item">Sustainable Materials</span>
+    <span class="marquee-item">Handfinished</span>
+    <span class="marquee-item">Unique Pieces</span>
+  </div>
+</div>
+
+<section class="section" id="about">
+  <div class="about-grid">
+    <div class="reveal">
+      <p class="section-label">Our philosophy</p>
+      <h2 class="section-title">Where form meets filtered light</h2>
+      <p class="about-body">Elden Designs was born from the belief that everyday objects deserve to be extraordinary. We combine the precision of 3D printing with Scandinavian design principles — restraint, warmth, and an obsession with material honesty.</p>
+      <p class="about-body">Every lamp we produce starts as a sketch, becomes a model, and is printed layer by layer into an object that holds light the way a hand cups flame.</p>
+      <div class="about-stats">
+        <div>
+          <div class="stat-num" id="stat1">0</div>
+          <div class="stat-label">Designs in collection</div>
+        </div>
+        <div>
+          <div class="stat-num" id="stat2">0</div>
+          <div class="stat-label">Orders fulfilled</div>
+        </div>
+        <div>
+          <div class="stat-num" id="stat3">0</div>
+          <div class="stat-label">Countries shipped</div>
+        </div>
+        <div>
+          <div class="stat-num" id="stat4">0</div>
+          <div class="stat-label">Custom pieces made</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual reveal">
+      <div class="about-card about-card-1"></div>
+      <div class="about-card about-card-2">
+        <div class="about-card-2-inner">
+          <p>"We don't print lamps. We print atmospheres."</p>
+          <span>— Elden Design Studio</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="collection" id="collection">
+  <div class="collection-header">
+    <div>
+      <p class="section-label">Signature collection</p>
+      <h2 class="section-title">Pieces for<br>quiet spaces</h2>
+    </div>
+    <a href="#" class="btn-link">View all pieces</a>
+  </div>
+  <div class="collection-grid">
+
+    <div class="product-card reveal">
+      <div class="product-img-wrap">
+        <div class="product-img">
+          <svg viewBox="0 0 200 320" width="160" height="260" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="g1" cx="50%" cy="40%" r="50%">
+                <stop offset="0%" stop-color="#C8A96E" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#C8A96E" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <ellipse cx="100" cy="280" rx="80" ry="10" fill="#C8A96E" opacity="0.12"/>
+            <polygon points="100,60 145,170 55,170" fill="#F8F5F0" opacity="0.9"/>
+            <polygon points="100,72 138,165 62,165" fill="#EDE8E0" opacity="0.5"/>
+            <rect x="93" y="170" width="14" height="4" fill="#F8F5F0"/>
+            <rect x="98" y="174" width="4" height="80" fill="#C8C8C8"/>
+            <ellipse cx="100" cy="254" rx="28" ry="6" fill="#F8F5F0"/>
+            <ellipse cx="100" cy="258" rx="34" ry="5" fill="#E0DAD0"/>
+            <circle cx="100" cy="100" r="20" fill="url(#g1)"/>
+            <ellipse cx="100" cy="240" rx="70" ry="30" fill="#C8A96E" opacity="0.08"/>
+          </svg>
+        </div>
+        <div class="product-hover-overlay"><button class="product-hover-btn">Add to cart</button></div>
+        <div class="product-tag">Bestseller</div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Vela Table Lamp</div>
+        <div class="product-price">€ 189 · Matte Ivory + Ash</div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" style="transition-delay:0.15s">
+      <div class="product-img-wrap" style="height:480px">
+        <div class="product-img">
+          <svg viewBox="0 0 200 420" width="140" height="380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="g2" cx="50%" cy="30%" r="40%">
+                <stop offset="0%" stop-color="#C8A96E" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#C8A96E" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <ellipse cx="100" cy="400" rx="70" ry="8" fill="#C8A96E" opacity="0.1"/>
+            <polygon points="100,40 130,120 70,120" fill="#F8F5F0" opacity="0.9"/>
+            <polygon points="100,50 126,115 74,115" fill="#EDE8E0" opacity="0.4"/>
+            <rect x="94" y="120" width="12" height="3" fill="#F8F5F0"/>
+            <rect x="99" y="123" width="2" height="240" fill="#B0ACA6"/>
+            <rect x="80" y="363" width="40" height="8" fill="#F8F5F0" rx="2"/>
+            <rect x="72" y="371" width="56" height="6" fill="#E0DAD0" rx="2"/>
+            <circle cx="100" cy="75" r="18" fill="url(#g2)"/>
+            <ellipse cx="100" cy="350" rx="60" ry="20" fill="#C8A96E" opacity="0.07"/>
+          </svg>
+        </div>
+        <div class="product-hover-overlay"><button class="product-hover-btn">Add to cart</button></div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Lyra Floor Lamp</div>
+        <div class="product-price">€ 340 · Charcoal + Brass</div>
+      </div>
+    </div>
+
+    <div class="product-card reveal" style="transition-delay:0.3s">
+      <div class="product-img-wrap">
+        <div class="product-img">
+          <svg viewBox="0 0 200 320" width="160" height="260" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="g3" cx="50%" cy="60%" r="50%">
+                <stop offset="0%" stop-color="#C8A96E" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#C8A96E" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <line x1="100" y1="10" x2="100" y2="70" stroke="#B0ACA6" stroke-width="1.5"/>
+            <polygon points="100,70 140,150 100,180 60,150" fill="#F8F5F0" opacity="0.9" stroke="#E0DAD0" stroke-width="0.5"/>
+            <polygon points="100,90 130,145 100,165 70,145" fill="#EDE8E0" opacity="0.5"/>
+            <polygon points="100,70 140,150 100,180 60,150" fill="none" stroke="#D0CAC0" stroke-width="0.5"/>
+            <line x1="100" y1="70" x2="100" y2="180" stroke="#D0CAC0" stroke-width="0.3" opacity="0.5"/>
+            <line x1="60" y1="150" x2="140" y2="150" stroke="#D0CAC0" stroke-width="0.3" opacity="0.5"/>
+            <circle cx="100" cy="130" r="25" fill="url(#g3)"/>
+            <ellipse cx="100" cy="260" rx="80" ry="20" fill="#C8A96E" opacity="0.1"/>
+          </svg>
+        </div>
+        <div class="product-hover-overlay"><button class="product-hover-btn">Add to cart</button></div>
+        <div class="product-tag">New</div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Facet Pendant</div>
+        <div class="product-price">€ 240 · Warm White + Gold</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="process">
+  <div style="text-align:center" class="reveal">
+    <p class="section-label">How we work</p>
+    <h2 class="section-title">From concept to<br>candlelit corner</h2>
+  </div>
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Design</div>
+      <p class="step-body">Every form is sketched by hand, then modelled with precision in 3D software — shaped by both intuition and geometry.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.15s">
+      <div class="step-num">02</div>
+      <div class="step-title">Print</div>
+      <p class="step-body">Layer by layer, our FDM printers build each piece in premium PLA+ or PETG — materials chosen for warmth and longevity.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.3s">
+      <div class="step-num">03</div>
+      <div class="step-title">Finish</div>
+      <p class="step-body">Each piece is hand-sanded, primed, and finished. Some receive a linen texture. Others stay raw — intentionally imperfect.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:0.45s">
+      <div class="step-num">04</div>
+      <div class="step-title">Deliver</div>
+      <p class="step-body">Packed in recycled paper and delivered with a card detailing the story of your piece — its file name, print time, finishing date.</p>
+    </div>
+  </div>
+</section>
+
+<section class="testimonial reveal">
+  <blockquote>"The Lyra lamp is the first object in my home I've described as a presence. It doesn't just illuminate the room — it becomes the room."</blockquote>
+  <cite>— Ingrid M., Stockholm</cite>
+</section>
+
+<section class="custom" id="custom">
+  <div class="reveal">
+    <p class="section-label">Bespoke service</p>
+    <h2 class="section-title">Your imagination,<br>our printer.</h2>
+    <p class="about-body">Have a space that needs something no catalogue can offer? We take custom commissions — from a single statement floor lamp to a full suite of matching pieces for an interior project.</p>
+    <p class="about-body" style="margin-top:-0.5rem">Share a reference, a mood, a material. We'll handle the rest.</p>
+    <div style="margin-top:2.5rem">
+      <button class="btn-primary">Start a custom order</button>
+    </div>
+  </div>
+  <div class="custom-visual reveal">
+    <div class="custom-visual-inner">
+      <svg viewBox="0 0 320 320" width="280" height="280" xmlns="http://www.w3.org/2000/svg" style="animation:floatLamp 8s ease-in-out infinite">
+        <defs>
+          <radialGradient id="customGlow" cx="50%" cy="60%" r="50%">
+            <stop offset="0%" stop-color="#C8A96E" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#C8A96E" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="160" cy="290" rx="100" ry="14" fill="#C8A96E" opacity="0.15"/>
+        <polygon points="160,60 220,180 100,180" fill="#1A1A18" opacity="0.88"/>
+        <polygon points="160,74 212,174 108,174" fill="#2A2A28" opacity="0.5"/>
+        <rect x="148" y="180" width="24" height="6" fill="#1A1A18"/>
+        <rect x="157" y="186" width="6" height="80" fill="#888"/>
+        <rect x="128" y="266" width="64" height="10" fill="#1A1A18" rx="3"/>
+        <rect x="118" y="276" width="84" height="8" fill="#111" rx="2"/>
+        <circle cx="160" cy="115" r="30" fill="url(#customGlow)"/>
+        <ellipse cx="160" cy="258" rx="90" ry="28" fill="#C8A96E" opacity="0.1"/>
+        <line x1="100" y1="180" x2="220" y2="180" stroke="#C8A96E" stroke-width="0.5" opacity="0.4"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Elden Designs</div>
+      <p class="footer-tagline">3D printed lamps for interiors that value the space between objects as much as the objects themselves.</p>
+    </div>
+    <div>
+      <div class="footer-heading">Collection</div>
+      <ul class="footer-links">
+        <li><a href="#">Table Lamps</a></li>
+        <li><a href="#">Floor Lamps</a></li>
+        <li><a href="#">Pendants</a></li>
+        <li><a href="#">Wall Sconces</a></li>
+        <li><a href="#">Custom Orders</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Studio</div>
+      <ul class="footer-links">
+        <li><a href="#">Our Process</a></li>
+        <li><a href="#">Materials</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Contact</div>
+      <ul class="footer-links">
+        <li><a href="#">hello@eldendesigns.com</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Pinterest</a></li>
+        <li><a href="#">Shipping &amp; Returns</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Elden Designs. All rights reserved.</span>
+    <span class="footer-copy">Designed &amp; printed with care.</span>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)}animRing();
+document.querySelectorAll('a,button,.product-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='60px';ring.style.height='60px';ring.style.opacity='0.2'});
+  el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.opacity='0.4'});
+});
+
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>80);
+});
+
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+},{threshold:0.15});
+reveals.forEach(r=>obs.observe(r));
+
+const counters=[
+  {el:'stat1',target:48,suffix:''},
+  {el:'stat2',target:1200,suffix:'+'},
+  {el:'stat3',target:22,suffix:''},
+  {el:'stat4',target:340,suffix:'+'}
+];
+const statObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      counters.forEach(c=>{
+        const el=document.getElementById(c.el);
+        let start=0;const dur=1800;const step=16;
+        const inc=c.target/(dur/step);
+        const timer=setInterval(()=>{
+          start+=inc;
+          if(start>=c.target){el.textContent=c.target+c.suffix;clearInterval(timer)}
+          else{el.textContent=Math.floor(start)+c.suffix}
+        },step);
+      });
+      statObs.disconnect();
+    }
+  });
+},{threshold:0.5});
+const statsEl=document.getElementById('stat1');
+if(statsEl)statObs.observe(statsEl.closest('.about-stats'));
+</script>
 </body>
 </html>
