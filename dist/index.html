@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+  <!-- LAMP COMPONENT — paste between body tags -->
+  <div class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-slate-950 w-full rounded-md">
+    
+    <!-- The light beams + glow effects -->
+    <div class="relative flex w-full flex-1 scale-y-125 items-center justify-center">
+
+      <!-- Left beam -->
+      <div class="absolute inset-auto right-1/2 h-56 w-[30rem] bg-cyan-500 opacity-50"
+           style="background: conic-gradient(from 70deg at center top, #06b6d4, transparent, transparent);">
+        <div class="absolute w-full left-0 bg-slate-950 h-40 bottom-0" style="mask-image: linear-gradient(to top, white, transparent); -webkit-mask-image: linear-gradient(to top, white, transparent);"></div>
+        <div class="absolute w-40 h-full left-0 bg-slate-950 bottom-0"  style="mask-image: linear-gradient(to right, white, transparent); -webkit-mask-image: linear-gradient(to right, white, transparent);"></div>
+      </div>
+
+      <!-- Right beam -->
+      <div class="absolute inset-auto left-1/2 h-56 w-[30rem] bg-cyan-500 opacity-50"
+           style="background: conic-gradient(from 290deg at center top, transparent, transparent, #06b6d4);">
+        <div class="absolute w-40 h-full right-0 bg-slate-950 bottom-0"  style="mask-image: linear-gradient(to left, white, transparent); -webkit-mask-image: linear-gradient(to left, white, transparent);"></div>
+        <div class="absolute w-full right-0 bg-slate-950 h-40 bottom-0" style="mask-image: linear-gradient(to top, white, transparent); -webkit-mask-image: linear-gradient(to top, white, transparent);"></div>
+      </div>
+
+      <!-- Blur layers -->
+      <div class="absolute top-1/2 h-48 w-full translate-y-12 scale-x-150 bg-slate-950 blur-2xl"></div>
+      <div class="absolute inset-auto h-36 w-[28rem] -translate-y-1/2 rounded-full bg-cyan-500 opacity-50 blur-3xl"></div>
+      <div class="absolute inset-auto h-36 w-64 -translate-y-24 rounded-full bg-cyan-400 blur-2xl"></div>
+
+      <!-- The bright glowing line -->
+      <div class="absolute inset-auto h-0.5 w-[30rem] -translate-y-28 bg-cyan-400"></div>
+
+      <!-- Bottom cover so content sits cleanly -->
+      <div class="absolute inset-auto h-44 w-full -translate-y-52 bg-slate-950"></div>
+    </div>
+
+    <!-- Your text goes here -->
+    <div class="relative flex -translate-y-80 flex-col items-center px-5">
+      <h1 class="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl">
+        Build lamps <br /> the right way
+      </h1>
+    </div>
+
+  </div>
+  <!-- END LAMP COMPONENT -->
+
+</body>
+</html>
